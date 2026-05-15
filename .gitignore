@@ -1,0 +1,27 @@
+# Neovim / Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+.netrwhist
+undo/
+Session.vim
+
+# Arch Linux / OS System files
+.DS_Store
+Thumbs.db
+*~
+
+# Diseño (Figma/Inkscape/Adobe)
+*.tmp
+*.bak
+*.autosave
+# Si exportas PDFs o imágenes pesadas de prueba
+/exports/
+/temp_assets/
+
+# Desarrollo
+node_modules/
+.env
+.venv
+__pycache__/
+dist/
+build/
