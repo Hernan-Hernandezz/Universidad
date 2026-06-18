@@ -20,26 +20,37 @@ Table Docentes {
 
 Table Aulas {
   id_aula int [pk, increment]
-  nombre_bloque varchar
-  numero_salon varchar
+  numero_bloque int
+  numero_salon int
 }
 
 Table Asignaturas {
   id_asignatura int [pk, increment]
   nombre_materia varchar
-  id_docente int [ref: <> Docentes.id_docente]
 }
+
 
 Table Inscripciones {
   id_inscripcion int [pk, increment]
   id_estudiante int [ref: > Estudiantes.id_estudiante]
   id_asignatura int [ref: > Asignaturas.id_asignatura]
   periodo_academico varchar // Ej: "2026-1"
+  nota float
+  id_clase_horario int [ref:> Clases_Horario.id_clase_horario]
+  //id_tareas int [ref: < Tareas.id_tarea]
+}
+
+Table clase {
+  id_clase int [pk]
+  //id_inscripcion int [ref:> Inscripciones.id_inscripcion]
+  id_clase_horario int [ref: > Clases_Horario.id_clase_horario]
+  id_asignatura int [ref: <> Asignaturas.id_asignatura]
+
 }
 
 Table Clases_Horario {
-  id_clase int [pk, increment]
-  id_asignatura int [ref: <> Asignaturas.id_asignatura]
+  id_clase_horario int [pk, increment]
+  //id_asignatura int [ref: <> Asignaturas.id_asignatura]
   id_aula int [ref: > Aulas.id_aula]
   dia_semana varchar // Lunes, Martes, etc.
   hora_inicio time
@@ -53,17 +64,15 @@ Table Clases_Horario {
 
 Table Tareas {
   id_tarea int [pk, increment]
-  id_asignatura int [ref: > Asignaturas.id_asignatura]
+  id_inscripciones int  [ref: > Inscripciones.id_inscripcion]
   titulo_tarea varchar
   descripcion text
   fecha_entrega datetime
+  estado text
+  nota float
+  porcentaje_asignatura int
 }
 
-Table Calificaciones {
-  id_calificacion int [pk, increment]
-  id_estudiante int [ref: > Estudiantes.id_estudiante]
-  nota_obtenida float
-}
 
 Table Alertas {
   id_alerta int [pk, increment]
@@ -73,4 +82,11 @@ Table Alertas {
   fecha_creacion datetime
   fecha_fin datetime
   prioridad varchar // Alta, Media, Baja
+}
+
+Table DocenteAsignatura{
+  id_docente_asignatura int [pk, increment]
+  id_docente int [ref: > Docentes.id_docente]
+  id_asignatura int [ref: > Asignaturas.id_asignatura]
+
 }
