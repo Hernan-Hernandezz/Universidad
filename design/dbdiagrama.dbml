@@ -1,0 +1,187 @@
+// =============================================
+// PLATAFORMA ESTUDIANTIL INTELIGENTE
+// Base de Datos - dbdiagram.io
+// =============================================
+
+
+// ---- MÓDULO DE USUARIOS ----
+
+Table Rol {
+  id_rol   int  [pk, increment]
+  nombre   varchar(50) [not null, unique, note: "estudiante | docente | admin"]
+}
+
+Table Usuarios {
+  id_usuario      int         [pk, increment]
+  nombre          varchar(100) [not null]
+  correo          varchar(150) [not null, unique]
+  contrasena_hash varchar(255) [not null]
+  id_rol          int         [not null, ref: > Rol.id_rol]
+  activo          boolean     [not null, default: true, note: "false = cuenta desactivada"]
+  creado_en       datetime    [not null, default: `now()`]
+  actualizado_en  datetime    [not null, default: `now()`]
+}
+
+Table Sesiones {
+  id_sesion   int         [pk, increment]
+  id_usuario  int         [not null, ref: > Usuarios.id_usuario]
+  token       varchar(500) [not null, unique]
+  creado_en   datetime    [not null, default: `now()`]
+  expira_en   datetime    [not null]
+}
+
+Table Verificacion_Correo {
+  id_verificacion int      [pk, increment]
+  id_usuario      int      [not null, ref: > Usuarios.id_usuario]
+  token           varchar(255) [not null, unique]
+  expira_en       datetime [not null]
+  verificado_en   datetime [null, note: "null = aún no verificado"]
+}
+
+Table Recuperacion_Contrasena {
+  id_recuperacion int      [pk, increment]
+  id_usuario      int      [not null, ref: > Usuarios.id_usuario]
+  token           varchar(255) [not null, unique]
+  expira_en       datetime [not null]
+  usado_en        datetime [null, note: "null = token aún no usado"]
+}
+
+
+// ---- MÓDULO ACADÉMICO Y HORARIOS ----
+
+Table Aulas {
+  id_aula        int         [pk, increment]
+  codigo         varchar(20) [not null, unique, note: "Ej: A-101"]
+  numero_bloque  varchar(10) [not null]
+  numero_salon   varchar(10) [not null]
+  capacidad      int         [not null, default: 30]
+  tipo           varchar(20) [not null, default: "salon", note: "salon | laboratorio | auditorio"]
+}
+
+Table Asignaturas {
+  id_asignatura  int          [pk, increment]
+  codigo         varchar(20)  [not null, unique, note: "Ej: MAT-101"]
+  nombre_materia varchar(150) [not null]
+  creditos       int          [not null, default: 3]
+}
+
+// Una Clase es un grupo específico de una asignatura en un periodo
+// Ej: Grupo 01 de Matemáticas III - 2026-1
+Table Clases {
+  id_clase          int         [pk, increment]
+  id_asignatura     int         [not null, ref: > Asignaturas.id_asignatura]
+  id_docente        int         [not null, ref: > Usuarios.id_usuario]
+  periodo_academico varchar(10) [not null, note: "Ej: 2026-1"]
+  grupo             varchar(10) [not null, default: "01", note: "Ej: 01, 02"]
+  cupo_maximo       int         [not null, default: 35]
+}
+
+Table Estado_Matricula {
+  id_estado_matricula int         [pk, increment]
+  estado              varchar(30) [not null, unique, note: "Activa | Cancelada | Finalizada"]
+}
+
+// Tabla intermedia: qué estudiante está en qué clase
+// Un estudiante NO puede matricularse dos veces en la misma clase
+Table Matriculas {
+  id_matricula        int   [pk, increment]
+  id_estudiante       int   [not null, ref: > Usuarios.id_usuario]
+  id_clase            int   [not null, ref: > Clases.id_clase]
+  id_estado_matricula int   [not null, ref: > Estado_Matricula.id_estado_matricula]
+  nota_final          float [null, note: "null hasta que termine el periodo"]
+  matriculado_en      datetime [not null, default: `now()`]
+
+  indexes {
+    (id_estudiante, id_clase) [unique, name: "uq_matricula_estudiante_clase"]
+  }
+}
+
+// Una clase puede tener varios bloques horarios a la semana
+// Ej: Matemáticas → Martes 8-10am y Jueves 2-4pm
+Table Clases_Horario {
+  id_clase_horario int         [pk, increment]
+  id_clase         int         [not null, ref: > Clases.id_clase]
+  id_aula          int         [not null, ref: > Aulas.id_aula]
+  dia_semana       varchar(12) [not null, note: "Lunes | Martes | Miércoles | Jueves | Viernes"]
+  hora_inicio      time        [not null]
+  hora_fin         time        [not null]
+}
+
+
+// ---- MÓDULO DE EVALUACIONES Y SIMULADOR ----
+
+Table Estado_Tareas {
+  id_estado_tarea int         [pk, increment]
+  nombre_estado   varchar(20) [not null, unique, note: "Pendiente | Entregado | Calificado | Simulado"]
+}
+
+// Tareas, quizzes o exámenes definidos por el docente para una clase
+Table Tareas {
+  id_tarea                 int          [pk, increment]
+  id_clase                 int          [not null, ref: > Clases.id_clase]
+  creado_por               int          [not null, ref: > Usuarios.id_usuario, note: "Docente que creó la tarea"]
+  titulo_tarea             varchar(200) [not null]
+  descripcion              text         [null]
+  fecha_entrega            datetime     [not null]
+  porcentaje_dentro_corte  float        [not null, note: "Ej: 20.0 = 20% del corte"]
+  corte                    int          [not null, note: "1 | 2 | 3 = número del corte académico"]
+  creado_en                datetime     [not null, default: `now()`]
+}
+
+// Tabla intermedia: nota de cada estudiante por cada tarea
+Table Tareas_Estudiante {
+  id_tarea_estudiante int   [pk, increment]
+  id_matricula        int   [not null, ref: > Matriculas.id_matricula]
+  id_tarea            int   [not null, ref: > Tareas.id_tarea]
+  id_estado_tarea     int   [not null, ref: > Estado_Tareas.id_estado_tarea]
+  nota                float [null, note: "null si aún no se ha calificado"]
+  es_simulada         boolean [not null, default: false, note: "true = nota del simulador"]
+  entregado_en        datetime [null]
+}
+
+
+// ---- MÓDULO DE COMUNICACIÓN Y ALERTAS ----
+
+Table Alertas {
+  id_alerta      int          [pk, increment]
+  id_creador     int          [not null, ref: > Usuarios.id_usuario, note: "Admin o sistema que creó la alerta"]
+  titulo         varchar(200) [not null]
+  mensaje        text         [not null]
+  prioridad      varchar(10)  [not null, default: "Media", note: "Alta | Media | Baja"]
+  fecha_creacion datetime     [not null, default: `now()`]
+  fecha_fin      datetime     [null, note: "null = alerta sin fecha de expiración"]
+}
+
+// Tabla intermedia: qué alertas ha recibido cada estudiante y si las leyó
+Table Estudiante_Alerta {
+  id_estudiante_alerta int      [pk, increment]
+  id_estudiante        int      [not null, ref: > Usuarios.id_usuario]
+  id_alerta            int      [not null, ref: > Alertas.id_alerta]
+  leido                boolean  [not null, default: false]
+  leido_en             datetime [null, note: "null = aún no leída"]
+}
+
+Table Chat {
+  id_chat    int          [pk, increment]
+  id_clase   int          [null, ref: > Clases.id_clase, note: "null = chat general, con valor = chat de una materia"]
+  nombre     varchar(150) [not null]
+  creado_en  datetime     [not null, default: `now()`]
+}
+
+// Tabla intermedia: miembros de cada chat
+Table Participante_Chat {
+  id_participante int      [pk, increment]
+  id_usuario      int      [not null, ref: > Usuarios.id_usuario]
+  id_chat         int      [not null, ref: > Chat.id_chat]
+  unido_en        datetime [not null, default: `now()`]
+}
+
+Table Mensajes_Chat {
+  id_mensaje   int      [pk, increment]
+  id_chat      int      [not null, ref: > Chat.id_chat]
+  id_usuario   int      [not null, ref: > Usuarios.id_usuario]
+  mensaje      text     [not null]
+  es_automatico boolean [not null, default: false, note: "true = mensaje del sistema"]
+  fecha_envio  datetime [not null, default: `now()`]
+  leido        boolean  [not null, default: false]
+}

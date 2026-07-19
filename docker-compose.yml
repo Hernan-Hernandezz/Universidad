@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: db_estudiantil
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: plataforma_estudiantil
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      # guarda los datos aunque se apague el Docker
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    container_name: backend_estudiantil
+    depends_on:
+      - postgres # espera que postgres arranque primero
+    environment:
+      DATABASE_URL: postgresql://admin:admin123@postgres:5432/plataforma_estudiantil
+      SECRET_KEY: clave_super_secreta
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app # recarga automática al guardar cambios
+
+  frontend:
+    build: ./frontend
+    container_name: frontend_estudiantil
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # evita conflictos con node_modules local
+
+volumes:
+  postgres_data:
