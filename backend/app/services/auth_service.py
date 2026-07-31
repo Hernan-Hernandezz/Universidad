@@ -35,9 +35,7 @@ class AuthService:
         return jwt.encode(datos, SECRET_KEY, algorithm=ALGORITHM)
 
     def login(self, mail: str, password: str):
-        print("inicio de codigo de login")
         user = self.get_user(mail)
-
         if user is None:
             print("Usuario encontrado")
             raise HTTPException(
@@ -47,14 +45,10 @@ class AuthService:
         # este verificaba si la contraseña estaba en hash
         if not self.verify_password(password, user.contrasena_hash):
             print("contraseña en hash")
-            raise HTTPException(
-                status_code=401, detail="Usuario o contraseña incorrecta"
-            )
-
+            raise HTTPException(status_code=401, detail="contraseña incorrecta")
         token = self.crear_token(
             {"id": user.id_usuario, "correo": user.correo, "rol": user.id_rol}
         )
-        print(token)
 
         return {"access_token": token, "token_type": "bearer"}
 

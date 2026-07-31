@@ -3,7 +3,7 @@ from datetime import time
 
 
 class LoginSchema(BaseModel):
-    correo: str
+    mail: str
     password: str
 
 

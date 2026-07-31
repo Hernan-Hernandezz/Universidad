@@ -10,4 +10,4 @@ router = APIRouter(prefix="/auth", tags=["Autenticación"])
 @router.post("/login", response_model=TokenSchema)
 def login(datos: LoginSchema, db: Session = Depends(get_db)):
     service = AuthService(db)
-    return service.login(datos.correo, datos.password)
+    return service.login(datos.mail, datos.password)

@@ -1,0 +1,46 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = tab
+indent_size = 2
+
+# Lua (coincide con tu stylua.toml, ajusta si usas otro indent_size ahí)
+[*.lua]
+indent_size = 2
+
+# JavaScript / TypeScript / React
+[*.{js,jsx,ts,tsx,mjs,cjs}]
+indent_size = 2
+
+# JSON
+[*.{json,jsonc}]
+indent_size = 2
+
+# YAML
+[*.{yml,yaml}]
+indent_size = 2
+
+# Markdown (no recortar espacios finales: dos espacios = salto de línea)
+[*.md]
+trim_trailing_whitespace = false
+indent_size = 2
+
+# Python
+[*.py]
+indent_size = 4
+
+# Makefile (requiere tabs, no espacios)
+[Makefile]
+indent_style = tab
+
+# Shell scripts
+[*.sh]
+indent_size = 2
+
+# Dockerfile
+[{Dockerfile,dockerfile}]
+indent_size = 4

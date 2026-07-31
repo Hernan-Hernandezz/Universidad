@@ -15,6 +15,10 @@ from app.services.auth_service import get_user_id, get_class_user
 from typing import List
 from app.services.user_service import User
 
+# from app.config import setup_icecream
+#
+# setup_icecream()
+
 Base.metadata.create_all(bind=engine)
 db: Session = Depends(get_db)
 app = FastAPI(
@@ -27,7 +31,7 @@ router = APIRouter()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

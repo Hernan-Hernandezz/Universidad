@@ -6,9 +6,13 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin123
       POSTGRES_DB: plataforma_estudiantil
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d plataforma_estudiantil"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql
-      # guarda los datos aunque se apague el Docker
     ports:
       - "5432:5432"
 
@@ -16,14 +20,15 @@ services:
     build: ./backend
     container_name: backend_estudiantil
     depends_on:
-      - postgres # espera que postgres arranque primero
+      postgres:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://admin:admin123@postgres:5432/plataforma_estudiantil
       SECRET_KEY: clave_super_secreta
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app # recarga automática al guardar cambios
+      - ./backend:/app
 
   frontend:
     build: ./frontend
@@ -31,10 +36,12 @@ services:
     depends_on:
       - backend
     ports:
-      - "5173:5173"
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
     volumes:
       - ./frontend:/app
-      - /app/node_modules # evita conflictos con node_modules local
+      - /app/node_modules
 
 volumes:
   postgres_data:

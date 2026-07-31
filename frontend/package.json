@@ -3,10 +3,10 @@
   "author": "Hernan-Hernandezz",
   "version": "0.1.0",
   "keywords": [],
-  "description": ""
+  "description": "",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
