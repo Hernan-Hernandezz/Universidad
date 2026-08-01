@@ -1,12 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
-// import { login } from "../lib/api";
-import { useState } from "react";
 import { useRef } from "react";
 
 const Page = () => {
-  // const [mail, setMail] = useState("");
-  // const [password, setPassword] = useState("");
   const inputEmail = useRef(null);
   const inputPassword = useRef(null);
   const router = useRouter();
@@ -16,7 +12,7 @@ const Page = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     e.preventDefault(); // evita que recargue la página
     try {
-      const respuesta = await fetch(`http://localhost:8000/auth/login`, {
+      const respuesta = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mail, password }),

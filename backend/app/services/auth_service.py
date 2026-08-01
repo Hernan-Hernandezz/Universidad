@@ -1,9 +1,10 @@
 from passlib.context import CryptContext
-from jose import jwt
+from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.models import models
+from icecream import ic
 import os
 
 pwd_context = CryptContext(schemes=["bcrypt"])
@@ -14,6 +15,8 @@ EXPIRE_MINUTES = 60
 
 
 class AuthService:
+    payload = {}
+
     def __init__(self, db: Session):
         self.db = db
 
@@ -37,20 +40,29 @@ class AuthService:
     def login(self, mail: str, password: str):
         user = self.get_user(mail)
         if user is None:
-            print("Usuario encontrado")
             raise HTTPException(
                 status_code=401, detail="Usuario o contraseña incorrecta"
             )
 
         # este verificaba si la contraseña estaba en hash
         if not self.verify_password(password, user.contrasena_hash):
-            print("contraseña en hash")
             raise HTTPException(status_code=401, detail="contraseña incorrecta")
         token = self.crear_token(
             {"id": user.id_usuario, "correo": user.correo, "rol": user.id_rol}
         )
-
+        ic.disable()
+        ic(token)
         return {"access_token": token, "token_type": "bearer"}
+
+    def verify_token(self, token):
+        ic.enable()
+        ic("entro a verificar token")
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            ic(payload)
+            return True
+        except JWTError:
+            raise HTTPException(status_code=401, detail="token invalido")
 
 
 # obtiene toda la informacion del usuario por id

@@ -10,3 +10,13 @@ class LoginSchema(BaseModel):
 class TokenSchema(BaseModel):
     access_token: str
     token_type: str
+
+
+class TokenVerifySchema(BaseModel):
+    access_token: str
+
+
+class TokenDataSchema(BaseModel):
+    id: int
+    correo: str
+    rol: int
