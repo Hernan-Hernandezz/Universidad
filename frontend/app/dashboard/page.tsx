@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { fetchAPI } from "../lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Dashboard = () => {
   const router = useRouter();
-  const [horarios, setHorarios] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -14,18 +14,8 @@ const Dashboard = () => {
       router.push("/login");
       return;
     }
-    const access_token = { access_token: token };
-    fetch(`${API_URL}/auth/token`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(access_token),
-    })
-      .then((res) => res.json())
-      .then((datos) => console.log(datos))
-      .catch((err) => console.error(err));
+    const academic_summary = fetchAPI("/user/academic_summary", token);
+    const horarios = fetchAPI("/user/horarios", token);
   }, []);
   const salir = () => {
     localStorage.removeItem("token");
