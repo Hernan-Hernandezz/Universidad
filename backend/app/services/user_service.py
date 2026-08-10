@@ -150,7 +150,7 @@ class User:
         )
         result = []
         for i in query:
-            result.append({"asignatura": i.nombre_materia, "nota": i.nota_final})
+            result.append({"nombre_materia": i.nombre_materia, "nota": i.nota_final})
         return result
 
     def get_pending_tasks(self):

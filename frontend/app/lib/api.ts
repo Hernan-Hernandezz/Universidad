@@ -16,6 +16,7 @@ export const login = async (mail: string, password: string) => {
   }
 };
 export const fetchAPI = async (pathUrl: string, access_token: string) => {
+  let response = [];
   const data = fetch(`${API_URL}${pathUrl}`, {
     method: "POST",
     headers: {
@@ -35,7 +36,6 @@ export const fetchAPI = async (pathUrl: string, access_token: string) => {
       }
       return res.json();
     })
-    .then((datos) => console.log(datos))
     .catch((err) => console.error(err));
   return data;
 };
