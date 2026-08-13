@@ -34,7 +34,8 @@ export const fetchAPI = async (pathUrl: string, access_token: string) => {
       if (!res.ok) {
         throw new Error("Otro error del servidor");
       }
-      return res.json();
+      const resJson = res.json();
+      return resJson;
     })
     .catch((err) => console.error(err));
   return data;

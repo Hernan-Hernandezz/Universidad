@@ -81,4 +81,6 @@ def pending_tasks(datos: TokenVerifySchema, db: Session = Depends(get_db)):
     token: TokenDataSchema = AuthService(db).verify_token(datos.access_token)
     user_id = token.id
     query = User(db, user_id)
-    return query.get_pending_tasks()
+    task = query.get_pending_tasks()
+    ic(task)
+    return task

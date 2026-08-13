@@ -3,11 +3,26 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #004959;
+  --secondary: #368fa2;
+  --tertiary: #acf2ff;
+  --alert: #ae443a;
+  /* --cyan-glow: #42f2f7ff; */
+  /* --pacific-blue: #46acc2ff; */ /* --dark-cyan: #498c8aff; */
+  /* --granite: #4b6858ff; */ /* --dark-khaki: #4d4730ff; */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  /* --color-cyan-glow: var(--cyan-glow); */
+  /* --color-pacific-blue: var(--pacific-blue); */
+  /* --color-dark-cyan: var(--dark-cyan); */
+  /* --color-granite: var(--granite); */
+  /* --color-dark-khaki: var(--dark-khaki); */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -16,6 +31,11 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    /* --cyan-glow: #42f2f7ff; */
+    /* --pacific-blue: #46acc2ff; */
+    /* --dark-cyan: #498c8aff; */
+    /* --granite: #4b6858ff; */
+    /* --dark-khaki: #4d4730ff; */
   }
 }
 

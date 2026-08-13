@@ -20,7 +20,7 @@ const Page = () => {
       if (respuesta.ok) {
         const datos = await respuesta.json();
         localStorage.setItem("token", datos.access_token);
-        router.push("/dashboard");
+        router.push("/");
       }
     } catch (e) {
       console.error(e);

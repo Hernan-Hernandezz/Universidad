@@ -6,7 +6,7 @@ const Exit = () => {
     router.push("/login");
   };
   return (
-    <button className="p-2 border-2 bg-blue-400" onClick={salir}>
+    <button className="p-2  bg-blue-400" onClick={salir}>
       salir
     </button>
   );

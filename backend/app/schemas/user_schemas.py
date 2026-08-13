@@ -30,10 +30,7 @@ class AcademicSummarySchema(BaseModel):
 
 
 class PendingTasks(BaseModel):
-    id_estudiante: int
-    nombre: str
-    correo: EmailStr
-    nombre_materia: str
+    asignatura: str
     titulo_tarea: str
     fecha_entrega: datetime
 

@@ -94,7 +94,6 @@ class User:
             return (day - today_weekday) % 7
 
         for i in query:
-            ic(i)
             if i.id_dia_semana >= today_weekday and (
                 i.hora_inicio.hour >= today.time().hour
                 or i.hora_fin.hour <= today.time().hour
@@ -167,6 +166,7 @@ class User:
             list: Lista de tareas pendientes ordenadas por fecha de entrega.
         """
         user_id = self.user_id
+        ic("entro a tareas pendientes")
         query = (
             self.db.query(
                 Matriculas.id_estudiante,
@@ -201,6 +201,7 @@ class User:
                     "fecha_entrega": i.fecha_entrega,
                 }
             )
+            ic(result)
         return result
 
     def get_class_user(self, user_id: int, db: Session):
