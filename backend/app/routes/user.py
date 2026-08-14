@@ -30,10 +30,7 @@ def class_user(user_id: int, db: Session = Depends(get_db)):
     return classData
 
 
-@router.post(
-    "/horarios"
-    # , response_model=List[ClassScheduleSchema]
-)
+@router.post("/horarios", response_model=List[ClassScheduleSchema])
 def class_schedule(datos: TokenVerifySchema, db: Session = Depends(get_db)):
     """
     Consulta las proximas clases apartir del token.
@@ -54,10 +51,7 @@ def class_schedule(datos: TokenVerifySchema, db: Session = Depends(get_db)):
     return list_class
 
 
-@router.post(
-    "/academic_summary"
-    # , response_model=List[AcademicSummarySchema]
-)
+@router.post("/academic_summary", response_model=List[AcademicSummarySchema])
 def academic_summary(datos: TokenVerifySchema, db: Session = Depends(get_db)):
     token: TokenDataSchema = AuthService(db).verify_token(datos.access_token)
     user_id = token.id

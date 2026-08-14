@@ -4,24 +4,19 @@ from datetime import time, datetime
 
 
 class ClassScheduleSchema(BaseModel):
-    id_estudiante: int
-    nombre: str
-    correo: EmailStr
-    nombre_materia: str
-    id_clase_horario: int
-    id_dia_semana: int
-    hora_inicio: time
+    fecha_proxima_clase: datetime
     hora_fin: time
-    # dia = datetime.datetime
+    hora_inicio: time
+    id_dia_semana: int
+    id_clase_horario: int
+    nombre_materia: str
+    aula: str
 
     class Config:
         from_attributes = True
 
 
 class AcademicSummarySchema(BaseModel):
-    id_estudiante: int
-    nombre: str
-    correo: EmailStr
     nombre_materia: str
     nota_final: float | None
 

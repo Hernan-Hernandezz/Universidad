@@ -1,9 +1,8 @@
-import Header from "../Components/Header";
+"use client";
 
 const Academico = () => {
   return (
     <div>
-      <Header />
       <h1>comunicacion</h1>
     </div>
   );

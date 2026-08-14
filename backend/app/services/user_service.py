@@ -8,6 +8,7 @@ horarios, resumen académico y tareas pendientes.
 from datetime import datetime, timedelta
 from icecream import ic
 from app.models.models import (
+    Aulas,
     Tareas_Estudiante,
     Matriculas,
     Usuarios,
@@ -62,6 +63,10 @@ class User:
                 Clases_Horario.id_dia_semana,
                 Clases_Horario.hora_inicio,
                 Clases_Horario.hora_fin,
+                Clases_Horario.id_aula,
+                Aulas.id_aula,
+                Aulas.numero_bloque,
+                Aulas.numero_salon,
             )
             .filter(
                 Matriculas.id_estudiante == user_id
@@ -71,6 +76,7 @@ class User:
             .join(Clases, Matriculas.id_clase == Clases.id_clase)
             .join(Asignaturas, Clases.id_asignatura == Asignaturas.id_asignatura)
             .join(Clases_Horario, Matriculas.id_clase == Clases_Horario.id_clase)
+            .join(Aulas, Clases_Horario.id_aula == Aulas.id_aula)
             .order_by(
                 Clases_Horario.id_dia_semana, Clases_Horario.id_clase_horario.desc()
             )
@@ -102,18 +108,21 @@ class User:
             else:
                 next_class.insert(0, i)
         result = []
+        ic(next_class)
         for i in next_class:
             fecha_clase = today + timedelta(days=days_remaining(i.id_dia_semana))
             result.append(
                 {
-                    "nombre_materia": i.nombre_materia,
-                    "id_clase_horario": i.id_clase_horario,
-                    "id_dia_semana": i.id_dia_semana,
-                    "hora_inicio": str(i.hora_inicio),
-                    "hora_fin": str(i.hora_fin),
                     "fecha_proxima_clase": fecha_clase,
+                    "hora_fin": str(i.hora_fin),
+                    "hora_inicio": str(i.hora_inicio),
+                    "id_dia_semana": i.id_dia_semana,
+                    "id_clase_horario": i.id_clase_horario,
+                    "nombre_materia": i.nombre_materia,
+                    "aula": f"bloque:{i.numero_bloque} salon:{i.numero_salon}",
                 }
             )
+        ic(result)
         return result
 
     def get_academic_summary(self):
@@ -149,7 +158,9 @@ class User:
         )
         result = []
         for i in query:
-            result.append({"nombre_materia": i.nombre_materia, "nota": i.nota_final})
+            result.append(
+                {"nombre_materia": i.nombre_materia, "nota_final": i.nota_final}
+            )
         return result
 
     def get_pending_tasks(self):
@@ -166,7 +177,6 @@ class User:
             list: Lista de tareas pendientes ordenadas por fecha de entrega.
         """
         user_id = self.user_id
-        ic("entro a tareas pendientes")
         query = (
             self.db.query(
                 Matriculas.id_estudiante,
@@ -201,7 +211,6 @@ class User:
                     "fecha_entrega": i.fecha_entrega,
                 }
             )
-            ic(result)
         return result
 
     def get_class_user(self, user_id: int, db: Session):

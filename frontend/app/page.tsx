@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchAPI } from "./lib/api";
-import Header from "./Components/Header";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -23,6 +22,7 @@ const Dashboard = () => {
       const dataHorarios = await fetchAPI("/user/horarios", token);
       const dataResumen = await fetchAPI("/user/academic_summary", token);
       const dataTareas = await fetchAPI("/user/pending_tasks", token);
+      //asigno los valores a los estados para pòsterior mente poder mostrarlos
       setResumen(dataResumen);
       setHorarios(dataHorarios);
       setTareas(dataTareas);
@@ -40,7 +40,7 @@ const Dashboard = () => {
   };
   return (
     <div className="flex w-screen gap-5">
-      <Header />
+      {/* contiene las proximas clases del estudiante*/}
       <div className="w-2xs">
         <h2 className="capitalize">proximas clases</h2>
         <ul className="flex flex-col h-fit">
@@ -52,12 +52,13 @@ const Dashboard = () => {
               <div className="pl-2">
                 <p>{h.nombre_materia}</p>
                 <p>{formatearFecha(h.fecha_proxima_clase)}</p>
+                <p>{h.aula}</p>
               </div>
             </li>
           ))}
         </ul>
       </div>
-
+      {/*contiene un resumen de las notas del estudiante*/}
       <div>
         <h2>Resumen Académico</h2>
         <div className=" grid grid-cols-2 h-fit w-max text-left">
@@ -71,7 +72,7 @@ const Dashboard = () => {
           ))}
         </div>
       </div>
-
+      {/*contiene las tareas pendientes del estudiante*/}
       <div>
         <h2>tareas pendientes</h2>
         <div className="flex flex-col">
