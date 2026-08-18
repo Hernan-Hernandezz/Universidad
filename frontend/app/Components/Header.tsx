@@ -1,6 +1,6 @@
-"use client";
-import Link from "next/link";
-import Exit from "../Components/Exit";
+'use client';
+import Link from 'next/link';
+import Exit from '../Components/Exit';
 
 interface Props {
   children: any;
@@ -8,23 +8,25 @@ interface Props {
 }
 const ItemLink = ({ children, href }: Props) => {
   return (
-    <li className="bg-secondary w-3/4 text-center p-2 rounded-lg">
-      <Link href={href}>{children}</Link>
+    <li className="grid w-3/4 content-center items-stretch">
+      <Link className="bg-secondary w-full rounded-lg p-2 text-center" href={href}>
+        {children}
+      </Link>
     </li>
   );
 };
 const Header = () => {
   return (
-    <header className="h-screen w-40 bg-primary  text-white text-md capitalize flex flex-col justify-around">
+    <header className="bg-primary text-md fixed flex h-screen w-1/7 flex-col justify-around text-white capitalize">
       <nav className="h-3/4">
-        <ul className="flex h-full gap-8 mt-8 items-center flex-col">
-          <ItemLink href="/">dashboard</ItemLink>
+        <ul className="mt-8 flex h-full w-full flex-col items-center gap-8">
+          <ItemLink href="/dashboard">dashboard</ItemLink>
           <ItemLink href="/horarios">horarios</ItemLink>
           <ItemLink href="/academico">academico</ItemLink>
           <ItemLink href="/comunicacion">comunicacion</ItemLink>
         </ul>
       </nav>
-      <div className="h-1/4 flex justify-center items-center w-full">
+      <div className="flex h-1/4 w-full items-center justify-center">
         <Exit className="w-3/4" />
       </div>
     </header>

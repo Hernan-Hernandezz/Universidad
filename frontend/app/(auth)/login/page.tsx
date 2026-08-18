@@ -1,6 +1,6 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { useRef } from "react";
+'use client';
+import { useRouter } from 'next/navigation';
+import { useRef } from 'react';
 
 const Input = ({ ref, placeholder, name, type }) => {
   return (
@@ -10,7 +10,7 @@ const Input = ({ ref, placeholder, name, type }) => {
       ref={ref}
       placeholder={placeholder}
       // onChange={(e) => setMail(e.target.value)}
-      className="h-6 border-2 border-primary p-5 rounded-full"
+      className="border-primary h-6 rounded-full border-2 p-5"
     />
   );
 };
@@ -26,35 +26,30 @@ const Page = () => {
     e.preventDefault(); // evita que recargue la página
     try {
       const respuesta = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mail, password }),
       });
       if (respuesta.ok) {
         const datos = await respuesta.json();
-        localStorage.setItem("token", datos.access_token);
-        router.push("/");
+        localStorage.setItem('token', datos.access_token);
+        router.push('/dashboard');
       }
     } catch (e) {
       console.error(e);
     }
   };
   return (
-    <div className="w-screen h-screen flex justify-center items-center capitalize">
-      <div className=" flex flex-col justify-center">
-        <h1 className="text-3xl px-5 font-bold mb-3">inicio de sesion</h1>
+    <div className="flex h-screen w-screen items-center justify-center capitalize">
+      <div className="flex flex-col justify-center">
+        <h1 className="mb-3 px-5 text-3xl font-bold">inicio de sesion</h1>
         <form
-          className="grid grid-cols-1 h-3/4 gap-3 justify-between content-center justify-items-center"
+          className="grid h-3/4 grid-cols-1 content-center justify-between justify-items-center gap-3"
           method="POST"
           onSubmit={handleSubmit}
         >
           {/* <label htmlFor="mail">mail:</label> */}
-          <Input
-            ref={inputEmail}
-            name="mail"
-            type="email"
-            placeholder="correo institucional"
-          />
+          <Input ref={inputEmail} name="mail" type="email" placeholder="correo institucional" />
           {/* <label htmlFor="password">password</label> */}
           <Input
             name="password"
@@ -64,7 +59,7 @@ const Page = () => {
             // onChange={(e) => setPassword(e.target.value)}
           />
           <button
-            className="bg-primary w-full text-white  h-6 p-5 capitalize rounded-full flex items-center justify-center hover:cursor-pointer"
+            className="bg-primary flex h-6 w-full items-center justify-center rounded-full p-5 text-white capitalize hover:cursor-pointer"
             type="submit"
           >
             iniciar sesíon
