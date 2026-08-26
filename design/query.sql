@@ -15,7 +15,7 @@ JOIN "Asignaturas"    a  ON c.id_asignatura = a.id_asignatura
 JOIN "Clases_Horario" h  ON h.id_clase      = c.id_clase
 JOIN "Aulas"          au ON h.id_aula       = au.id_aula
 JOIN "Dia_Semana"     d  ON h.id_dia_semana = d.id_dia_semana
-WHERE m.id_estudiante = 1 ORDER BY d.id_dia_semana  ASC, h.hora_inicio ASC;
+--WHERE m.id_estudiante = 1 ORDER BY d.id_dia_semana  ASC, h.hora_inicio ASC;
 
 --busca las asignaturas y su horario de todos los estudiantes
 
@@ -45,7 +45,7 @@ FROM "Matriculas" m
 JOIN "Usuarios"    u ON m.id_estudiante  = u.id_usuario
 JOIN "Clases"      c ON m.id_clase       = c.id_clase
 JOIN "Asignaturas" a ON c.id_asignatura  = a.id_asignatura
-WHERE u.id_usuario = 2;
+--WHERE u.id_usuario = 2;
 
 
 -- buscar tareas pendiente por estudiante
@@ -62,7 +62,7 @@ SELECT
   JOIN "Tareas"         t ON te.id_tarea      = t.id_tarea
   JOIN "Asignaturas"    a ON c.id_asignatura  = a.id_asignatura
   JOIN "Usuarios"       u ON m.id_estudiante  = u.id_usuario
-  WHERE u.id_usuario = 2
+--WHERE u.id_usuario = 2
   ;
 
 SELECT

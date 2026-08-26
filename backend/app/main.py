@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base, get_db
-from app.routes import auth, user
+from app.routes import auth, user, admin
 
 from app.config import setup_icecream
 
@@ -28,6 +28,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(user.router)
+app.include_router(admin.router)
 
 
 @app.get("/")
